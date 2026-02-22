@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertly — Convert Anything to Anything | Free Pandoc Converter</title>
+    <meta name="description" content="Free online document converter powered by Pandoc. Convert Markdown, HTML, DOCX, PDF, and 10+ formats instantly. No registration, no limits, completely free.">
+    <meta name="keywords" content="document converter, markdown to html, html to pdf, pandoc online, file converter, free converter, docx to markdown, pdf converter">
+    <link rel="canonical" href="https://convertly.onrender.com/">
+    <meta property="og:title" content="Convertly — Convert Anything to Anything">
+    <meta property="og:description" content="Free online document converter powered by Pandoc. Convert Markdown, HTML, DOCX, PDF, and 10+ formats instantly.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://convertly.onrender.com/">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Convertly",
+      "description": "Free online document converter powered by Pandoc. Convert between Markdown, HTML, DOCX, PDF, and 10+ formats instantly.",
+      "url": "https://convertly.onrender.com",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is Convertly really free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! Convertly is completely free with no registration required, no file size limits, and no hidden fees. Powered by open-source Pandoc."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What formats can I convert?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Convertly supports 13+ formats including Markdown, HTML, DOCX, PDF, ODT, RST, LaTeX, plain text, EPUB, JSON, Org-mode, AsciiDoc, and CSV."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my files safe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Absolutely. All files are deleted within 2 seconds of download. We store nothing permanently—files are processed in memory and tmp only."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does Convertly work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Convertly uses Pandoc, the gold-standard document converter. Upload or paste your content, select formats, and get instant results powered by our Go backend."
+          }
+        }
+      ]
+    }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ink: #0d0d0d;
+            --paper: #f5f0e8;
+            --cream: #ede8dc;
+            --gold: #c8a84b;
+            --muted: #8a7f6e;
+            --border: #d4cdc0;
+            --white: #fefcf8;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Geist', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Grain texture overlay */
+        .grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(254, 252, 248, 0.9);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--ink);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .badge {
+            background: var(--gold);
+            color: var(--white);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 5rem 2rem 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: var(--cream);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+            animation: fadeUp 0.6s ease-out;
+        }
+
+        .hero h1 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 3.5rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            animation: fadeUp 0.6s ease-out 0.1s backwards;
+        }
+
+        .hero h1 em {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+            animation: fadeUp 0.6s ease-out 0.2s backwards;
+        }
+
+        .format-pills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 900px;
+            margin: 2rem auto 0;
+            animation: fadeUp 0.6s ease-out 0.3s backwards;
+        }
+
+        .format-pill {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--muted);
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Converter Section */
+        .converter {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .converter-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            background: var(--cream);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-family: 'Geist', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--muted);
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn:hover {
+            color: var(--ink);
+        }
+
+        .tab-btn.active {
+            background: var(--white);
+            color: var(--ink);
+            border-bottom-color: var(--gold);
+        }
+
+        .tab-content {
+            padding: 2rem;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Format Row */
+        .format-row {
+            display: grid;
+            grid-template-columns: 1fr 48px 1fr;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .format-select {
+            width: 100%;
+            max-height: 200px;
+            padding: 0.6rem 2rem 0.6rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Geist', sans-serif;
+            font-size: 0.85rem;
+            background: var(--white);
+            color: var(--ink);
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238a7f6e' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.6rem center;
+        }
+
+        .format-select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(200, 168, 75, 0.1);
+        }
+
+        /* Make select dropdown scrollable and limit visible options */
+        .format-select option {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.85rem;
+        }
+
+        .swap-btn {
+            width: 48px;
+            height: 48px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            background: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .swap-btn:hover {
+            background: var(--cream);
+            transform: rotate(180deg);
+        }
+
+        .swap-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--muted);
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.drag-over {
+            border-color: var(--gold);
+            background: rgba(200, 168, 75, 0.05);
+        }
+
+        .upload-zone input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            stroke: var(--muted);
+        }
+
+        .upload-zone h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-zone p {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .file-info {
+            display: none;
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--cream);
+            border-radius: 8px;
+        }
+
+        .file-info.active {
+            display: block;
+        }
+
+        .file-info-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .file-info-size {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        /* Textarea */
+        textarea {
+            width: 100%;
+            min-height: 320px;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Geist', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            background: var(--white);
+            color: var(--ink);
+            resize: vertical;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(200, 168, 75, 0.15), inset 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        textarea::placeholder {
+            color: var(--muted);
+            opacity: 0.7;
+        }
+
+        /* Textarea wrapper for better layout */
+        .textarea-wrapper {
+            position: relative;
+        }
+
+        .char-counter {
+            position: absolute;
+            bottom: 0.75rem;
+            right: 0.75rem;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--muted);
+            background: var(--white);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            opacity: 0.9;
+            pointer-events: none;
+        }
+
+        /* Clear button for textarea */
+        .clear-textarea {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.25s ease;
+            color: var(--muted);
+            z-index: 10;
+        }
+
+        .clear-textarea:hover {
+            background: var(--cream);
+            border-color: var(--gold);
+            color: var(--ink);
+            transform: scale(1.05);
+        }
+
+        .clear-textarea:active {
+            transform: scale(0.95);
+        }
+
+        /* Show clear button when textarea has content or is hovered */
+        .textarea-wrapper:hover .clear-textarea,
+        .textarea-wrapper.has-content .clear-textarea {
+            opacity: 1;
+        }
+
+        .textarea-wrapper .clear-textarea {
+            opacity: 0;
+        }
+
+        /* Error Message */
+        .error-message {
+            display: none;
+            padding: 1rem;
+            background: #f5e6e6;
+            border: 1px solid #e8c4c4;
+            border-radius: 8px;
+            color: #b5451b;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .error-message.active {
+            display: flex;
+        }
+
+        /* Convert Button */
+        .convert-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--ink);
+            color: var(--gold);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Geist', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 1.5rem;
+        }
+
+        .convert-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .convert-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(200, 168, 75, 0.3);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        .convert-btn.loading .btn-text {
+            display: none;
+        }
+
+        .convert-btn.loading .spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Result Panel */
+        .result-panel {
+            display: none;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--cream);
+            border-radius: 12px;
+        }
+
+        .result-panel.active {
+            display: block;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+        }
+
+        .result-header h3 {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .result-meta {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-left: auto;
+        }
+
+        .result-content {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.85rem;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Geist', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--ink);
+            color: var(--gold);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--ink);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--cream);
+        }
+
+        /* Features Section */
+        .features {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 1rem;
+            stroke: var(--gold);
+        }
+
+        .feature-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* SEO Sections */
+        .seo-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            scroll-margin-top: 100px;
+        }
+
+        .seo-section h2 {
+            scroll-margin-top: 100px;
+        }
+
+        .features {
+            scroll-margin-top: 100px;
+        }
+
+        .seo-section h2 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .seo-section p {
+            color: var(--muted);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .seo-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .seo-link {
+            padding: 0.5rem 1rem;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--ink);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .seo-link:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--cream);
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: var(--gold);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .format-row {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .swap-btn {
+                margin: 0 auto;
+                width: 40px;
+                height: 40px;
+            }
+
+            .format-select {
+                font-size: 0.8rem;
+                padding: 0.5rem 1.5rem 0.5rem 0.5rem;
+            }
+
+            textarea {
+                min-height: 250px;
+                font-size: 0.9rem;
+                padding: 1rem;
+            }
+
+            .char-counter {
+                font-size: 0.7rem;
+                bottom: 0.5rem;
+                right: 0.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .nav-links a:not(.badge) {
+                display: none;
+            }
+
+            .converter {
+                padding: 0 1rem 3rem;
+            }
+
+            .tab-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Grain Texture -->
+    <svg class="grain">
+        <filter id="noise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+        </filter>
+        <rect width="100%" height="100%" filter="url(#noise)" opacity="0.05"/>
+    </svg>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="/" class="logo">cv <span>Convertly</span></a>
+        <div class="nav-links">
+            <a href="#formats">Formats</a>
+            <a href="#faq">FAQ</a>
+            <span class="badge">Free & Open Source</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-tag">Powered by Pandoc</div>
+        <h1>Convert <em>anything</em> to<br>anything</h1>
+        <p class="subtitle">Fast, free, secure document conversion in your browser</p>
+        <div class="format-pills" id="formatPills"></div>
+    </section>
+
+    <!-- Converter Section -->
+    <main class="converter">
+        <div class="converter-card">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="file">File Upload</button>
+                <button class="tab-btn" data-tab="paste">Paste Content</button>
+            </div>
+
+            <div class="tab-content">
+                <!-- Format Selection -->
+                <div class="format-row">
+                    <select class="format-select" id="fromFmt">
+                        <option value="">From format...</option>
+                    </select>
+                    <button class="swap-btn" id="swapBtn" title="Swap formats">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                            <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12M17 20l-4-4M17 20l4-4"/>
+                        </svg>
+                    </button>
+                    <select class="format-select" id="toFmt">
+                        <option value="">To format...</option>
+                    </select>
+                </div>
+
+                <!-- File Upload Tab -->
+                <div class="tab-panel active" id="filePanel">
+                    <div class="upload-zone" id="uploadZone">
+                        <input type="file" id="fileInput">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                        </svg>
+                        <h3>Drop your file here</h3>
+                        <p>or click to browse</p>
+                    </div>
+                    <div class="file-info" id="fileInfo">
+                        <div class="file-info-name" id="fileName"></div>
+                        <div class="file-info-size" id="fileSize"></div>
+                    </div>
+                </div>
+
+                <!-- Paste Content Tab -->
+                <div class="tab-panel" id="pastePanel">
+                    <div class="textarea-wrapper">
+                        <button class="clear-textarea" id="clearText" title="Clear all text" aria-label="Clear text area">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6L6 18M6 6l12 12"/>
+                            </svg>
+                        </button>
+                        <textarea id="contentInput" placeholder="Paste your Markdown, HTML, RST, LaTeX, Jupyter, Jira, or any other content here..." aria-label="Content to convert"></textarea>
+                        <div class="char-counter" id="charCounter">0 chars • 0 words</div>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div class="error-message" id="errorMsg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <span id="errorText"></span>
+                </div>
+
+                <!-- Convert Button -->
+                <button class="convert-btn" id="convertBtn">
+                    <span class="btn-text">Convert Now</span>
+                    <div class="spinner"></div>
+                </button>
+
+                <!-- Result Panel -->
+                <div class="result-panel" id="resultPanel">
+                    <div class="result-header">
+                        <div class="status-dot"></div>
+                        <h3>Conversion complete</h3>
+                        <span class="result-meta" id="resultMeta"></span>
+                    </div>
+                    <div class="result-content" id="resultContent"></div>
+                    <div class="result-actions">
+                        <button class="btn-primary" id="downloadBtn">Download File</button>
+                        <button class="btn-secondary" id="copyBtn">Copy Text</button>
+                        <button class="btn-secondary" id="resetBtn">Convert Another</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                    <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                <h3>Lightning Fast</h3>
+                <p>Conversions happen in seconds. Powered by Go and Pandoc for maximum performance.</p>
+            </div>
+            <div class="feature-card">
+                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                    <path d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z"/>
+                </svg>
+                <h3>Privacy First</h3>
+                <p>All files deleted within 2 seconds of download. Nothing stored on our servers.</p>
+            </div>
+            <div class="feature-card">
+                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                    <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <h3>100% Free</h3>
+                <p>No registration, no limits, no hidden fees. Completely free forever.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="seo-section" id="faq">
+        <h2>Frequently Asked Questions</h2>
+        <p><strong>Is Convertly really free?</strong> Yes! Convertly is completely free with no registration required. There are no file size limits, no conversion limits, and no hidden fees. It's powered by open-source Pandoc and runs on free infrastructure.</p>
+        <p><strong>What formats can I convert?</strong> Convertly supports 13+ formats including Markdown, HTML, DOCX, PDF, ODT, RST, LaTeX, plain text, MediaWiki, EPUB, JSON, Org-mode, AsciiDoc, and CSV. Convert between any two formats seamlessly.</p>
+        <p><strong>Are my files safe?</strong> Absolutely. All files are processed in memory or stored temporarily in /tmp, and are deleted within 2 seconds of download. We keep no logs, no records, and no copies of your documents.</p>
+        <p><strong>How does Convertly work?</strong> Convertly uses Pandoc, the gold-standard document converter used by academics and professionals worldwide. Our Go backend runs Pandoc in a secure containerized environment with strict timeouts and resource limits.</p>
+    </section>
+
+    <!-- Formats Section -->
+    <section class="seo-section" id="formats">
+        <h2>Supported Formats</h2>
+        <p>Convertly supports 27+ document formats, powered by Pandoc's comprehensive conversion engine. Whether you need to convert Markdown to HTML, PDF to Word, Excel to CSV, PowerPoint to HTML, or any other combination, Convertly handles it all instantly.</p>
+        <p><strong>Popular formats:</strong> Markdown (.md), HTML (.html), Microsoft Word (.docx), PDF, PowerPoint (.pptx), Excel (.xlsx), OpenDocument (.odt), reStructuredText (.rst), LaTeX (.tex), plain text (.txt), EPUB (.epub), JSON (.json), GitHub-Flavored Markdown (GFM), CSV.</p>
+        <p><strong>Developer formats:</strong> Org-mode, AsciiDoc, Jupyter Notebooks (.ipynb), Vimwiki, Jira Wiki markup, OPML, DocBook, MediaWiki, TWiki, TikiWiki, Creole.</p>
+        <p><strong>Other formats:</strong> Rich Text Format (RTF), Textile, FictionBook (.fb2). Convert between any two formats seamlessly. Perfect for developers, writers, academics, and anyone needing fast, free document conversion.</p>
+    </section>
+
+    <!-- Internal Links Section -->
+    <section class="seo-section">
+        <h2>Popular Conversions</h2>
+        <div class="seo-links">
+            <a href="/convert/markdown-to-html" class="seo-link">Markdown to HTML</a>
+            <a href="/convert/markdown-to-pdf" class="seo-link">Markdown to PDF</a>
+            <a href="/convert/html-to-markdown" class="seo-link">HTML to Markdown</a>
+            <a href="/convert/docx-to-markdown" class="seo-link">DOCX to Markdown</a>
+            <a href="/convert/markdown-to-docx" class="seo-link">Markdown to DOCX</a>
+            <a href="/convert/rst-to-html" class="seo-link">RST to HTML</a>
+            <a href="/convert/latex-to-html" class="seo-link">LaTeX to HTML</a>
+            <a href="/convert/html-to-pdf" class="seo-link">HTML to PDF</a>
+            <a href="/convert/markdown-to-epub" class="seo-link">Markdown to EPUB</a>
+            <a href="/convert/rst-to-markdown" class="seo-link">RST to Markdown</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>Convertly — Convert anything to anything. Powered by <a href="https://pandoc.org" target="_blank">Pandoc</a>. <a href="/sitemap.xml">Sitemap</a></p>
+    </footer>
+
+    <script>
+        const FORMATS = ['markdown', 'html', 'docx', 'pdf', 'gfm', 'pptx', 'rst', 'latex', 'odt', 'plain', 'mediawiki', 'epub', 'json', 'org', 'asciidoc', 'csv', 'rtf', 'textile', 'docbook', 'jira', 'ipynb', 'opml', 'fb2', 'vimwiki', 'twiki', 'tikiwiki', 'creole'];
+        const API = '';
+
+        let currentTab = 'file';
+        let selectedFile = null;
+        let resultBlob = null;
+        let resultExt = '';
+
+        // Formats that produce human-readable text output (can show preview + copy button)
+        const textFormats = ['markdown', 'html', 'plain', 'rst', 'latex', 'mediawiki', 'textile', 'org', 'asciidoc', 'docbook', 'jira', 'creole', 'vimwiki', 'twiki', 'tikiwiki', 'gfm'];
+
+        // DOM Elements
+        const fromFmt = document.getElementById('fromFmt');
+        const toFmt = document.getElementById('toFmt');
+        const swapBtn = document.getElementById('swapBtn');
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const contentInput = document.getElementById('contentInput');
+        const charCounter = document.getElementById('charCounter');
+        const errorMsg = document.getElementById('errorMsg');
+        const errorText = document.getElementById('errorText');
+        const convertBtn = document.getElementById('convertBtn');
+        const resultPanel = document.getElementById('resultPanel');
+        const resultContent = document.getElementById('resultContent');
+        const resultMeta = document.getElementById('resultMeta');
+        const formatPills = document.getElementById('formatPills');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await populateFormats();
+            fromFmt.value = 'markdown';
+            toFmt.value = 'html';
+            populateFormatPills();
+            initDragDrop();
+            initCharCounter();
+        });
+
+        // Character counter
+        function initCharCounter() {
+            contentInput.addEventListener('input', updateCharCounter);
+            document.getElementById('clearText').addEventListener('click', () => {
+                contentInput.value = '';
+                updateCharCounter();
+                contentInput.focus();
+            });
+        }
+
+        function updateCharCounter() {
+            const chars = contentInput.value.length;
+            const words = contentInput.value.trim() ? contentInput.value.trim().split(/\s+/).length : 0;
+            charCounter.textContent = `${chars.toLocaleString()} chars • ${words.toLocaleString()} words`;
+
+            // Show/hide clear button based on content
+            const wrapper = document.querySelector('.textarea-wrapper');
+            if (chars > 0) {
+                wrapper.classList.add('has-content');
+            } else {
+                wrapper.classList.remove('has-content');
+            }
+        }
+
+        async function populateFormats() {
+            try {
+                const response = await fetch('/api/formats');
+                const data = await response.json();
+
+                const inputOptions = data.input.map(f =>
+                    `<option value="${f}">${f.charAt(0).toUpperCase() + f.slice(1)}</option>`
+                ).join('');
+                fromFmt.innerHTML = '<option value="">From format...</option>' + inputOptions;
+
+                const outputOptions = data.output.map(f =>
+                    `<option value="${f}">${f.charAt(0).toUpperCase() + f.slice(1)}</option>`
+                ).join('');
+                toFmt.innerHTML = '<option value="">To format...</option>' + outputOptions;
+
+                // Store formats for format pills
+                window.allFormats = [...data.input, ...data.output];
+            } catch (error) {
+                console.error('Failed to load formats:', error);
+                // Fallback to hardcoded list
+                const options = FORMATS.map(f => `<option value="${f}">${f.charAt(0).toUpperCase() + f.slice(1)}</option>`).join('');
+                fromFmt.innerHTML = '<option value="">From format...</option>' + options;
+                toFmt.innerHTML = '<option value="">To format...</option>' + options;
+                window.allFormats = FORMATS;
+            }
+        }
+
+        function populateFormatPills() {
+            // Show ALL formats for better SEO and user awareness
+            const formats = window.allFormats || FORMATS;
+            const uniqueFormats = [...new Set(formats)]; // Remove duplicates
+            formatPills.innerHTML = uniqueFormats.map(f =>
+                `<span class="format-pill">${f.toUpperCase()}</span>`
+            ).join('');
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                switchTab(tab);
+            });
+        });
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            document.getElementById(`${tab}Panel`).classList.add('active');
+            hideError();
+            hideResult();
+        }
+
+        // Swap formats
+        swapBtn.addEventListener('click', () => {
+            const temp = fromFmt.value;
+            fromFmt.value = toFmt.value;
+            toFmt.value = temp;
+        });
+
+        // File input
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                setFile(e.target.files[0]);
+            }
+        });
+
+        function setFile(file) {
+            selectedFile = file;
+            fileName.textContent = file.name;
+            fileSize.textContent = formatBytes(file.size);
+            uploadZone.style.display = 'none';
+            fileInfo.classList.add('active');
+
+            // Auto-detect format
+            const ext = '.' + file.name.split('.').pop().toLowerCase();
+            const formatMap = {
+                '.md': 'markdown', '.markdown': 'markdown',
+                '.html': 'html', '.htm': 'html',
+                '.docx': 'docx', '.odt': 'odt',
+                '.rst': 'rst', '.tex': 'latex',
+                '.txt': 'plain', '.wiki': 'mediawiki',
+                '.epub': 'epub', '.json': 'json',
+                '.org': 'org', '.adoc': 'asciidoc',
+                '.csv': 'csv'
+            };
+            if (formatMap[ext]) {
+                fromFmt.value = formatMap[ext];
+            }
+        }
+
+        // Drag and drop
+        function initDragDrop() {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(event => {
+                uploadZone.addEventListener(event, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+            });
+
+            ['dragenter', 'dragover'].forEach(event => {
+                uploadZone.addEventListener(event, () => {
+                    uploadZone.classList.add('drag-over');
+                });
+            });
+
+            ['dragleave', 'drop'].forEach(event => {
+                uploadZone.addEventListener(event, () => {
+                    uploadZone.classList.remove('drag-over');
+                });
+            });
+
+            uploadZone.addEventListener('drop', (e) => {
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    setFile(files[0]);
+                }
+            });
+        }
+
+        // Convert button
+        convertBtn.addEventListener('click', startConversion);
+
+        async function startConversion() {
+            hideError();
+            hideResult();
+
+            const from = fromFmt.value;
+            const to = toFmt.value;
+
+            if (!from || !to) {
+                showError('Please select both source and target formats');
+                return;
+            }
+
+            if (from === to) {
+                showError('Source and target formats must be different');
+                return;
+            }
+
+            if (currentTab === 'file' && !selectedFile) {
+                showError('Please select a file to convert');
+                return;
+            }
+
+            if (currentTab === 'paste' && !contentInput.value.trim()) {
+                showError('Please enter some content to convert');
+                return;
+            }
+
+            setLoading(true);
+
+            try {
+                let response;
+                if (currentTab === 'file') {
+                    const formData = new FormData();
+                    formData.append('file', selectedFile);
+                    formData.append('from', from);
+                    formData.append('to', to);
+                    response = await fetch(API + '/api/convert', {
+                        method: 'POST',
+                        body: formData
+                    });
+                } else {
+                    response = await fetch(API + '/api/convert', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            from: from,
+                            to: to,
+                            content: contentInput.value
+                        })
+                    });
+                }
+
+                const data = await response.json();
+
+                if (!response.ok || data.error) {
+                    throw new Error(data.error || 'Conversion failed');
+                }
+
+                // Download the result
+                const downloadResp = await fetch(API + '/api/download?id=' + data.job_id);
+                if (!downloadResp.ok) {
+                    throw new Error('Failed to download result');
+                }
+
+                resultBlob = await downloadResp.blob();
+                resultExt = '.' + to;
+
+                // Check if output format is human-readable text
+                const isTextFormat = textFormats.includes(to);
+
+                if (isTextFormat) {
+                    // Text format: show preview + copy button
+                    const text = await resultBlob.text();
+                    const preview = text.length > 4000 ? text.substring(0, 4000) + '\n\n(truncated for preview)' : text;
+                    resultContent.style.display = 'block';
+                    resultContent.textContent = preview;
+                    resultMeta.textContent = `${to.toUpperCase()} • ${formatBytes(resultBlob.size)} • ${text.length} chars`;
+                    updateResultButtons(true); // Show both download and copy
+                } else {
+                    // Binary format (PDF, DOCX, PPTX, etc.): only download button
+                    resultContent.style.display = 'none';
+                    resultMeta.textContent = `${to.toUpperCase()} • ${formatBytes(resultBlob.size)} • Ready to download`;
+                    updateResultButtons(false); // Show download only
+                }
+                showResult();
+
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // Download result
+        document.getElementById('downloadBtn').addEventListener('click', downloadResult);
+
+        function downloadResult() {
+            if (!resultBlob) return;
+            const url = URL.createObjectURL(resultBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'converted' + resultExt;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Copy result
+        document.getElementById('copyBtn').addEventListener('click', copyResult);
+
+        async function copyResult() {
+            if (!resultBlob) return;
+            const text = await resultBlob.text();
+            try {
+                await navigator.clipboard.writeText(text);
+                const btn = document.getElementById('copyBtn');
+                btn.textContent = '✓ Copied!';
+                setTimeout(() => btn.textContent = 'Copy Text', 2000);
+            } catch (err) {
+                showError('Failed to copy to clipboard');
+            }
+        }
+
+        // Reset
+        document.getElementById('resetBtn').addEventListener('click', resetAll);
+
+        function resetAll() {
+            selectedFile = null;
+            resultBlob = null;
+            fileInput.value = '';
+            contentInput.value = '';
+            uploadZone.style.display = 'block';
+            fileInfo.classList.remove('active');
+            hideResult();
+            hideError();
+        }
+
+        // Utility functions
+        function setLoading(loading) {
+            convertBtn.disabled = loading;
+            convertBtn.classList.toggle('loading', loading);
+        }
+
+        function showError(message) {
+            errorText.textContent = message;
+            errorMsg.classList.add('active');
+        }
+
+        function hideError() {
+            errorMsg.classList.remove('active');
+        }
+
+        function showResult() {
+            resultPanel.classList.add('active');
+        }
+
+        function hideResult() {
+            resultPanel.classList.remove('active');
+        }
+
+        function updateResultButtons(showCopy) {
+            const downloadBtn = document.getElementById('downloadBtn');
+            const copyBtn = document.getElementById('copyBtn');
+
+            // Always show download button
+            downloadBtn.style.display = 'inline-block';
+
+            // Show copy button only for text formats
+            if (showCopy) {
+                copyBtn.style.display = 'inline-block';
+            } else {
+                copyBtn.style.display = 'none';
+            }
+        }
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+    </script>
+</body>
+</html>

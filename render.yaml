@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: convertly
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: "8080"
+    healthCheckPath: /ping
+    autoDeploy: true
