@@ -320,22 +320,6 @@ var seoPages = map[string]SEOPage{
 		ToFmt:       "pdf",
 		Slug:        "gfm-to-pdf",
 	},
-	"pptx-to-pdf": {
-		Title:       "PowerPoint to PDF Converter Online",
-		Description: "Convert PowerPoint (PPTX) presentations to PDF instantly. Convert slides to PDF documents with our free online converter.",
-		Keywords:    "pptx to pdf, powerpoint to pdf, slides to pdf",
-		FromFmt:     "pptx",
-		ToFmt:       "pdf",
-		Slug:        "pptx-to-pdf",
-	},
-	"pptx-to-html": {
-		Title:       "PowerPoint to HTML Converter Online",
-		Description: "Convert PowerPoint (PPTX) presentations to HTML instantly. Export slides as HTML with our free online converter.",
-		Keywords:    "pptx to html, powerpoint to html, slides to html",
-		FromFmt:     "pptx",
-		ToFmt:       "html",
-		Slug:        "pptx-to-html",
-	},
 	"markdown-to-pptx": {
 		Title:       "Markdown to PowerPoint Converter Online",
 		Description: "Convert Markdown to PowerPoint (PPTX) instantly. Create PowerPoint presentations from Markdown files.",
