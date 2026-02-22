@@ -1,0 +1,6 @@
+# Alternative: Use buildpacks for faster builds
+# To use: Rename render.yaml to render.yaml.bak and create a new render.yaml
+# that specifies "buildCommand" instead of "docker"
+
+# This is just documentation - buildpacks are not recommended for this project
+# due to complex dependencies (Pandoc + TeX Live)
