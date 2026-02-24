@@ -689,7 +689,7 @@ func processJob(job Job) {
 
 		if selectedEngine == "" {
 			// No PDF engine available - fail fast with clear error
-			result.Err = fmt.Errorf("PDF conversion requires a LaTeX engine (xelatex, pdflatex, or luatex) to be installed. Please install texlive-latex-extra package")
+			result.Err = fmt.Errorf("PDF conversion requires a LaTeX engine (xelatex, pdflatex, or luatex) to be installed. Please install texlive-latex-recommended and lmodern packages")
 			job.ResultChan <- result
 
 			jobStore.Lock()

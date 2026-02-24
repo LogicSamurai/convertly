@@ -21,6 +21,8 @@ RUN apk add --no-cache \
     pandoc \
     texlive \
     texlive-latexextra \
+    texlive-latexrecommended \
+    lmodern \
     ca-certificates
 
 # Copy binary from builder

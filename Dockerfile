@@ -25,8 +25,11 @@ RUN apt-get update && \
     pandoc \
     texlive-latex-base \
     texlive-latex-extra \
+    texlive-latex-recommended \
     texlive-fonts-recommended \
+    texlive-fonts-extra \
     texlive-xetex \
+    lmodern \
     ca-certificates && \
     apt-get autoremove -y && \
     apt-get clean && \
